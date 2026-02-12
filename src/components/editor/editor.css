@@ -1,103 +1,78 @@
-body {
-  background: #0f172a;
-  font-family: Inter, sans-serif;
+.editor-wrapper {
+  max-width: 900px;
+  margin: 30px auto;
 }
 
-/* Main Container */
-.editor-container {
-  max-width: 950px;
-  margin: 40px auto;
-  background: #111827;
-  border-radius: 16px;
-  border: 1px solid #1f2937;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
-  overflow: hidden;
-}
-
-/* Toolbar */
-.editor-toolbar {
-  display: flex;
-  gap: 10px;
-  padding: 14px 18px;
-  background: linear-gradient(to right, #0f172a, #1f2937);
-  border-bottom: 1px solid #2d3748;
-}
-
-.editor-toolbar button,
-.editor-toolbar select {
-  padding: 6px 14px;
-  border-radius: 8px;
-  border: 1px solid #374151;
-  background: #0f172a;
-  color: #e5e7eb;
-  cursor: pointer;
-  font-size: 14px;
-  transition: 0.2s;
-}
-
-.editor-toolbar button:hover,
-.editor-toolbar select:hover {
-  background: #1f2937;
-}
-
-.editor-toolbar .active {
+.add-btn {
+  margin-bottom: 20px;
+  padding: 8px 14px;
   background: #2563eb;
-  border-color: #2563eb;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
 }
 
-/* Editor */
 .editor-content {
-  padding: 28px;
-  min-height: 400px;
-  color: #e2e8f0;
-  font-size: 16px;
-  line-height: 1.7;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
 }
 
-/* Code Block Wrapper */
-.codeblock-wrapper {
-  margin-top: 20px;
+.codegroup-container {
   border-radius: 12px;
   overflow: hidden;
   border: 1px solid #1f2937;
-  background: #0b1220;
+  margin-top: 20px;
 }
 
-/* Header */
-.codeblock-header {
+.codegroup-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   background: #111827;
-  padding: 8px 14px;
-  font-size: 13px;
-  border-bottom: 1px solid #1f2937;
+  padding: 8px 12px;
 }
 
-.codeblock-language {
-  color: #9ca3af;
-  font-weight: 600;
-  text-transform: uppercase;
+.tabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.copy-button {
+.tab {
+  padding: 6px 12px;
   background: #1f2937;
-  border: none;
-  padding: 4px 10px;
   border-radius: 6px;
-  color: #e5e7eb;
   cursor: pointer;
-  font-size: 12px;
+  color: #e5e7eb;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.copy-button:hover {
+.tab.active {
   background: #2563eb;
 }
 
-/* Code Body */
-.codeblock-body {
-  padding: 16px;
-  margin: 0;
-  overflow-x: auto;
-  font-size: 14px;
+.remove-btn {
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.add-select {
+  background: #1f2937;
+  color: white;
+  border: none;
+  padding: 6px;
+  border-radius: 6px;
+}
+
+.copy-btn {
+  background: #1f2937;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
 }

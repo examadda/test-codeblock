@@ -1,25 +1,13 @@
-import { useState } from "react";
+import React from "react";
 import RichTextEditor from "./components/editor/RichTextEditor";
 
 function App() {
-  const [content, setContent] = useState("");
-
   return (
-    <div>
-      <RichTextEditor onChange={setContent} />
-
-      <div
-        style={{
-          maxWidth: "950px",
-          margin: "40px auto",
-          background: "#ffffff",
-          padding: "30px",
-          borderRadius: "16px",
-        }}
-      >
-        <h2>Live Preview</h2>
-        <div dangerouslySetInnerHTML={{ __html: content }} />
-      </div>
+    <div style={{ background: "#0f172a", minHeight: "100vh", padding: "4px" }}>
+      <h1 style={{ color: "white", textAlign: "center" }}>
+        Industry-Level DSA Editor
+      </h1>
+      <RichTextEditor />
     </div>
   );
 }
