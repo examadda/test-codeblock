@@ -1,6 +1,6 @@
 import React from "react";
 import RichTextEditor from "./components/editor/RichTextEditor";
-
+import RichTextEditorView from "./components/editor/RichTextEditorViews";
 export default function App() {
   return (
     <div style={{
@@ -11,6 +11,7 @@ export default function App() {
     }}>
 
       <RichTextEditor />
+      <RichTextEditorView />
     </div>
   );
 }
