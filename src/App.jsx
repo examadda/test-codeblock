@@ -10,7 +10,7 @@ export default function App() {
       color: "white"
     }}>
 
-      <RichTextEditor />
+      {/* <RichTextEditor /> */}
       <RichTextEditorView />
     </div>
   );

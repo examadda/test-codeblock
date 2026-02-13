@@ -19,7 +19,7 @@ const RichTextEditor = () => {
       attrs: {
         languages: {
           python: "",
-           java: "",
+          java: "",
         },
       },
     }).run();
@@ -51,7 +51,7 @@ const RichTextEditor = () => {
         Add Code Block
 
       </button>
-       <button onClick={saveDocument}>
+      <button onClick={saveDocument}>
         Save
       </button>
 

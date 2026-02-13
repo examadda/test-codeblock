@@ -317,27 +317,27 @@ const CodeGroupNode = ({ node, updateAttributes }) => {
 
               SUPPORTED_LANGUAGES
 
-              .filter(
+                .filter(
 
-                l => !languages[l.value]
+                  l => !languages[l.value]
 
-              )
+                )
 
-              .map(lang => (
+                .map(lang => (
 
-                <option
+                  <option
 
-                  key={lang.value}
+                    key={lang.value}
 
-                  value={lang.value}
+                    value={lang.value}
 
-                >
+                  >
 
-                  {lang.label}
+                    {lang.label}
 
-                </option>
+                  </option>
 
-              ))
+                ))
 
             }
 

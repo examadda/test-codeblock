@@ -1,198 +1,390 @@
-import React, {
-  useState,
-  useMemo,
-  useCallback,
-  useEffect,
-} from "react";
+import React,
+{
+    useState,
+    useMemo,
+    useCallback
+}
+    from "react";
 
-import { NodeViewWrapper } from "@tiptap/react";
-import Editor from "@monaco-editor/react";
+import { NodeViewWrapper }
+    from "@tiptap/react";
 
-const CodeGroupNodeViews = ({ node, updateAttributes }) => {
-
-  const languages = node.attrs.languages || {};
-  const [isEditable, setIsEditable] = useState(false);
-
-  const preferred = localStorage.getItem("preferred_language");
-
-  const initialLang = useMemo(() => {
-    if (preferred && languages[preferred]) return preferred;
-    return Object.keys(languages)[0];
-  }, [languages, preferred]);
-
-  const [activeLang, setActiveLang] = useState(initialLang);
-  const [output, setOutput] = useState("");
-  const [isRunning, setIsRunning] = useState(false);
-  const [copied, setCopied] = useState(false);
-
-  useEffect(() => {
-    localStorage.setItem("preferred_language", activeLang);
-  }, [activeLang]);
-
-  const updateCode = useCallback(
-    (value) => {
-
-      updateAttributes({
-        languages: {
-          ...languages,
-          [activeLang]: value || "",
-        },
-      });
-
-    },
-    [activeLang, languages, updateAttributes]
-  );
-
-  const copyCode = async () => {
-
-    await navigator.clipboard.writeText(
-      languages[activeLang] || ""
-    );
-
-    setCopied(true);
-
-    setTimeout(() => setCopied(false), 1500);
-
-  };
+import Editor
+    from "@monaco-editor/react";
 
 
-  const runCode = async () => {
+const CodeGroupNodeViews =
+    ({
+        node,
+        updateAttributes
+    }) => {
 
-    try {
+        /*
+          Languages from TipTap node
+        */
 
-      setIsRunning(true);
-      setOutput("Running...");
+        const languages =
+            node.attrs.languages || {};
 
-      const runRes = await fetch(
-        "http://ide.examadda.org/run",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            language: activeLang,
-            code: languages[activeLang],
-          }),
-        }
-      );
+        /*
+          Edit mode state
+        */
 
-      const runData = await runRes.json();
+        const [isEditable,
+            setIsEditable] =
+            useState(false);
 
-      const id = runData.id;
+        /*
+          Active language
+          Default = first language
+        */
 
-      let result;
+        const initialLang =
+            useMemo(() => {
 
-      while (true) {
+                const keys =
+                    Object.keys(languages);
 
-        const res = await fetch(
-          `http://ide.examadda.org/result/${id}`
-        );
+                return keys.length
+                    ? keys[0]
+                    : "javascript";
 
-        result = await res.json();
+            },
+                [languages]);
 
-        if (result.status === "completed")
-          break;
+        const [activeLang,
+            setActiveLang] =
+            useState(initialLang);
 
-        await new Promise(r =>
-          setTimeout(r, 1000)
-        );
+        /*
+          Output state
+        */
 
-      }
+        const [output,
+            setOutput] =
+            useState("");
 
-      setOutput(result.output || "No output");
+        const [isRunning,
+            setIsRunning] =
+            useState(false);
 
-    }
-    catch {
+        const [copied,
+            setCopied] =
+            useState(false);
 
-      setOutput("Execution failed");
+        /*
+          Update code in TipTap document
+        */
 
-    }
-    finally {
+        const updateCode =
+            useCallback(
+                (value) => {
 
-      setIsRunning(false);
+                    updateAttributes({
 
-    }
+                        languages:
+                        {
+                            ...languages,
 
-  };
+                            [activeLang]:
+                                value || ""
 
+                        }
 
-  const enableEdit = () => {
-    setIsEditable(true);
-  };
-  return (
+                    });
 
-    <NodeViewWrapper className="codegroup">
+                },
+                [
+                    activeLang,
+                    languages,
+                    updateAttributes
+                ]);
 
-      <div className="header">
+        /*
+          Copy code
+        */
 
-        <div className="tabs">
+        const copyCode =
+            async () => {
 
-          {Object.keys(languages).map(lang => (
+                await navigator.clipboard
+                    .writeText(
+                        languages[activeLang] || ""
+                    );
 
-            <div
-              key={lang}
-              className={`tab ${activeLang === lang ? "active" : ""}`}
-              onClick={() => setActiveLang(lang)}
+                setCopied(true);
+
+                setTimeout(
+                    () => setCopied(false),
+                    1500
+                );
+
+            };
+
+        /*
+          Run code
+        */
+
+        const runCode =
+            async () => {
+
+                try {
+
+                    setIsRunning(true);
+
+                    setOutput("Running...");
+
+                    const runRes =
+                        await fetch(
+                            "http://ide.examadda.org/run",
+                            {
+                                method: "POST",
+
+                                headers:
+                                {
+                                    "Content-Type":
+                                        "application/json"
+                                },
+
+                                body:
+                                    JSON.stringify({
+                                        language:
+                                            activeLang,
+
+                                        code:
+                                            languages[
+                                            activeLang
+                                            ]
+                                    })
+                            });
+
+                    const runData =
+                        await runRes.json();
+
+                    const runId =
+                        runData.id;
+
+                    let result;
+
+                    while (true) {
+
+                        const res =
+                            await fetch(
+                                `http://ide.examadda.org/result/${runId}`
+                            );
+
+                        result =
+                            await res.json();
+
+                        if (
+                            result.status ===
+                            "completed"
+                        )
+                            break;
+
+                        await new Promise(
+                            r =>
+                                setTimeout(r, 1000)
+                        );
+
+                    }
+
+                    setOutput(
+                        result.output ||
+                        "No output"
+                    );
+
+                }
+                catch {
+
+                    setOutput(
+                        "Execution failed"
+                    );
+
+                }
+                finally {
+
+                    setIsRunning(false);
+
+                }
+
+            };
+
+        /*
+          Enable edit mode
+        */
+
+        const enableEdit =
+            () =>
+                setIsEditable(true);
+
+        /*
+          Render
+        */
+
+        return (
+
+            <NodeViewWrapper
+                className="codegroup"
             >
-              {lang.toUpperCase()}
-            </div>
 
-          ))}
+                {/* HEADER */}
 
-        </div>
+                <div className="header">
 
-        <div className="actions">
+                    {/* Language Tabs */}
 
-          <button onClick={copyCode}>
-            {copied ? "Copied" : "Copy"}
-          </button>
+                    <div className="tabs">
 
-          <button
-            onClick={runCode}
-            disabled={isRunning}
-          >
-            {isRunning ? "Running..." : "Run"}
-          </button>
+                        {
 
+                            Object.keys(
+                                languages
+                            ).map(lang => (
 
-          {!isEditable && (
+                                <div
 
-            <button onClick={enableEdit}>
-              Edit
-            </button>
-          )}
-        </div>
+                                    key={lang}
 
-      </div>
+                                    className={
+                                        activeLang === lang
+                                            ? "tab active"
+                                            : "tab"
+                                    }
 
-      <Editor
-        height="350px"
-        theme="vs-dark"
-        language={activeLang}
-        value={languages[activeLang]}
-        onChange={updateCode}
-        options={{
-          readOnly: !isEditable, // KEY LINE
-          fontSize: 14,
-          minimap: { enabled: false },
-          automaticLayout: true,
-          wordWrap: "on",
-        }}
-      />
+                                    onClick={() =>
+                                        setActiveLang(lang)
+                                    }
 
-      {output && (
+                                >
 
-        <div className="output">
-          <pre>{output}</pre>
-        </div>
+                                    {lang.toUpperCase()}
 
-      )}
+                                </div>
 
-    </NodeViewWrapper>
+                            ))
 
-  );
+                        }
 
-};
+                    </div>
 
-export default React.memo(CodeGroupNodeViews);
+                    {/* Actions */}
+
+                    <div className="actions">
+
+                        <button
+                            onClick={
+                                copyCode
+                            }
+                        >
+
+                            {
+                                copied
+                                    ? "Copied"
+                                    : "Copy"
+                            }
+
+                        </button>
+
+                        <button
+                            onClick={
+                                runCode
+                            }
+
+                            disabled={
+                                isRunning
+                            }
+                        >
+
+                            {
+                                isRunning
+                                    ? "Running..."
+                                    : "Run"
+                            }
+
+                        </button>
+
+                        {
+
+                            !isEditable &&
+
+                            <button
+                                onClick={
+                                    enableEdit
+                                }
+                            >
+                                Edit
+                            </button>
+
+                        }
+
+                    </div>
+
+                </div>
+
+                {/* MONACO EDITOR */}
+
+                <Editor
+
+                    height="350px"
+
+                    theme="vs-dark"
+
+                    language={
+                        activeLang
+                    }
+
+                    value={
+                        languages[
+                        activeLang
+                        ]
+                    }
+
+                    onChange={
+                        updateCode
+                    }
+
+                    options={{
+                        readOnly:
+                            !isEditable,
+
+                        fontSize: 14,
+
+                        minimap: {
+                            enabled: false
+                        },
+
+                        automaticLayout: true,
+
+                        wordWrap: "on"
+
+                    }}
+
+                />
+
+                {/* OUTPUT */}
+
+                {
+
+                    output &&
+
+                    <div className="output">
+
+                        <pre>
+                            {output}
+                        </pre>
+
+                    </div>
+
+                }
+
+            </NodeViewWrapper>
+
+        );
+
+    };
+
+export default
+    React.memo(
+        CodeGroupNodeViews
+    );

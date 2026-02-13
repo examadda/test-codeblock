@@ -8,37 +8,37 @@ import { sampleDoc } from "../../data/sampleDoc";
 
 const RichTextEditor = () => {
 
-  const editor = useEditor({
-    extensions: [
-      StarterKit,
-       CodeGroupExtensionView,
-    ],
+    const editor = useEditor({
+        extensions: [
+            StarterKit,
+            CodeGroupExtensionView,
+        ],
 
-    content: sampleDoc, // 👈 directly load JSON
-    editable: false, // when preview
+        content: sampleDoc, // 👈 directly load JSON
+        editable: false, // when preview
 
-  });
+    });
 
-  if (!editor) return null;
+    if (!editor) return null;
 
-  return (
+    return (
 
-    <div
-      style={{
-        background: "#0f172a",
-        minHeight: "100vh",
-        padding: "20px",
-        color: "white",
-      }}
-    >
+        <div
+            style={{
+                background: "#0f172a",
+                minHeight: "100vh",
+                padding: "20px",
+                color: "white",
+            }}
+        >
 
-      <h2>DSA Article Preview</h2>
+            <h2>DSA Article Preview</h2>
 
-      <EditorContent editor={editor} />
+            <EditorContent editor={editor} />
 
-    </div>
+        </div>
 
-  );
+    );
 
 };
 
