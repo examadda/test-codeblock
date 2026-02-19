@@ -136,7 +136,7 @@ const CodeGroupNodeViews =
 
                     const runRes =
                         await fetch(
-                            "http://ide.examadda.org/run",
+                            "http://ide.examadda.org:8000/run",
                             {
                                 method: "POST",
 
@@ -160,17 +160,21 @@ const CodeGroupNodeViews =
 
                     const runData =
                         await runRes.json();
+                    const runId = runData.data.jobId;
 
-                    const runId =
-                        runData.id;
+                    if (!runId) {
+                        throw new Error("Job ID not received");
+                    }
+
 
                     let result;
+                    let count =0
 
-                    while (true) {
-
+                    while (count< 1 && true) {
+                        count=count+1
                         const res =
                             await fetch(
-                                `http://ide.examadda.org/result/${runId}`
+                                `http://ide.examadda.org:8000/result/${runId}`
                             );
 
                         result =
@@ -184,7 +188,7 @@ const CodeGroupNodeViews =
 
                         await new Promise(
                             r =>
-                                setTimeout(r, 1000)
+                                setTimeout(r, 2000)
                         );
 
                     }
